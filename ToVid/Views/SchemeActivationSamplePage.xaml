@@ -24,10 +24,12 @@
             Grid.Row="0"
             x:Uid="SchemeActivationSamplePage_Description"
             Style="{StaticResource BodyTextStyle}" />
+
         <ScrollViewer Grid.Row="1" Margin="{StaticResource SmallTopBottomMargin}">
             <ItemsControl
                 ItemsSource="{x:Bind Parameters}"
                 ItemTemplate="{StaticResource ActivationParameterDateTemplate}" />
         </ScrollViewer>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Click="Button_Click" Margin="0,49,0,0" Height="38"/>
     </Grid>
 </Page>

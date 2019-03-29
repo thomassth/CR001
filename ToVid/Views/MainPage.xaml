@@ -7,6 +7,7 @@
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
     <Grid
+        Background="{ThemeResource SystemControlAcrylicWindowBrush}"
         x:Name="ContentArea"
         Margin="{StaticResource MediumLeftRightMargin}">
         <Grid>

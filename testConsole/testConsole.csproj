@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AAB28FB6-4D88-4FD9-A167-C012BB2F1C1D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>testConsole</RootNamespace>
+    <AssemblyName>testConsole</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Windows, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Windows Kits\10\UnionMetadata\10.0.17763.0\Windows.winmd</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="ffmpeg\presets\ffprobe.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ffmpeg\presets\libvpx-1080p.ffpreset" />
+    <None Include="ffmpeg\presets\libvpx-1080p50_60.ffpreset" />
+    <None Include="ffmpeg\presets\libvpx-360p.ffpreset" />
+    <None Include="ffmpeg\presets\libvpx-720p.ffpreset" />
+    <None Include="ffmpeg\presets\libvpx-720p50_60.ffpreset" />
+    <None Include="Windows.winmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ffmpeg\bin\ffmpeg.exe" />
+    <Content Include="ffmpeg\bin\ffplay.exe" />
+    <Content Include="ffmpeg\bin\ffprobe.exe" />
+    <Content Include="ffmpeg\doc\bootstrap.min.css" />
+    <Content Include="ffmpeg\doc\default.css" />
+    <Content Include="ffmpeg\doc\developer.html" />
+    <Content Include="ffmpeg\doc\faq.html" />
+    <Content Include="ffmpeg\doc\fate.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-all.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-bitstream-filters.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-codecs.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-devices.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-filters.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-formats.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-protocols.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-resampler.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-scaler.html" />
+    <Content Include="ffmpeg\doc\ffmpeg-utils.html" />
+    <Content Include="ffmpeg\doc\ffmpeg.html" />
+    <Content Include="ffmpeg\doc\ffplay-all.html" />
+    <Content Include="ffmpeg\doc\ffplay.html" />
+    <Content Include="ffmpeg\doc\ffprobe-all.html" />
+    <Content Include="ffmpeg\doc\ffprobe.html" />
+    <Content Include="ffmpeg\doc\general.html" />
+    <Content Include="ffmpeg\doc\git-howto.html" />
+    <Content Include="ffmpeg\doc\libavcodec.html" />
+    <Content Include="ffmpeg\doc\libavdevice.html" />
+    <Content Include="ffmpeg\doc\libavfilter.html" />
+    <Content Include="ffmpeg\doc\libavformat.html" />
+    <Content Include="ffmpeg\doc\libavutil.html" />
+    <Content Include="ffmpeg\doc\libswresample.html" />
+    <Content Include="ffmpeg\doc\libswscale.html" />
+    <Content Include="ffmpeg\doc\mailing-list-faq.html" />
+    <Content Include="ffmpeg\doc\nut.html" />
+    <Content Include="ffmpeg\doc\platform.html" />
+    <Content Include="ffmpeg\doc\style.min.css" />
+    <Content Include="ffmpeg\LICENSE.txt" />
+    <Content Include="ffmpeg\README.txt" />
+    <Content Include="Windows.Foundation.FoundationContract.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

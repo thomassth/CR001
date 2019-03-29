@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
+using Windows.Foundation.Metadata;
+using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -16,6 +21,12 @@ namespace ToVid.Views
     public sealed partial class SchemeActivationSamplePage : Page, INotifyPropertyChanged
     {
         public ObservableCollection<string> Parameters { get; } = new ObservableCollection<string>();
+
+        public static BackgroundTaskDeferral AppServiceDeferral = null;
+        public static AppServiceConnection Connection = null;
+        public static event EventHandler AppServiceDisconnected;
+        public static event EventHandler<AppServiceTriggerDetails> AppServiceConnected;
+        public static bool IsForeground = false;
 
         public SchemeActivationSamplePage()
         {
@@ -63,5 +74,56 @@ namespace ToVid.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public string ffmpegArg = @"ffmpeg -y -loop 1 -framerate 2 -i 'C: \Users\thoma\AppData\Local\Packages\b0379a39 - e70e - 4c21 - 8f94 - ffb23dcfa746_gkx4qx1bgg8j8\LocalState\Temp\AddCast@2x.png' -i 'C:\Users\thoma\AppData\Local\Packages\b0379a39 - e70e - 4c21 - 8f94 - ffb23dcfa746_gkx4qx1bgg8j8\LocalState\Temp\01 Pompeii.mp3' -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest 'C:\Users\thoma\AppData\Local\Packages\b0379a39 - e70e - 4c21 - 8f94 - ffb23dcfa746_gkx4qx1bgg8j8\LocalState\Temp\1.mkv'";
+
+        private async void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+
+
+                // store command line parameters in local settings
+                // so the Lancher can retrieve them and pass them on
+                ApplicationData.Current.LocalSettings.Values["parameters"] = ffmpegArg;
+
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
+            }
+
+
+        }
+
+        //public void OnBackgroundActivated (BackgroundActivatedEventArgs args)
+        //{
+        //    //base.OnBackgroundActivated(args);
+
+        //    if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
+        //    {
+        //        // only accept connections from callers in the same package
+        //        if (details.CallerPackageFamilyName == Package.Current.Id.FamilyName)
+        //        {
+        //            // connection established from the fulltrust process
+        //            AppServiceDeferral = args.TaskInstance.GetDeferral();
+        //            args.TaskInstance.Canceled += OnTaskCanceled;
+
+        //            Connection = details.AppServiceConnection;
+        //            AppServiceConnected?.Invoke(this, args.TaskInstance.TriggerDetails as AppServiceTriggerDetails);
+        //        }
+        //    }
+        //}
+
+        /// <summary>
+        /// Task canceled here means the app service client is gone
+        /// </summary>
+        //private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        //{
+        //    AppServiceDeferral?.Complete();
+        //    AppServiceDeferral = null;
+        //    Connection = null;
+        //    AppServiceDisconnected?.Invoke(this, null);
+        //}
+
+
     }
 }
