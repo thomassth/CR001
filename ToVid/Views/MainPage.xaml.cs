@@ -197,7 +197,7 @@ namespace ToVid.Views
 
             ///prepare ffmpeg
             string ffmpegArg = $"-y -loop 1 -framerate 2 -i \"" + imageSend + "\" -i \"" + audioSend + "\" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest \"" + videoSend + "\"";
-            //string strCmdText = @"-y -loop 1 -framerate 2 -i Assets/StoreLogo.png -i Assets/BBC.mp3 -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest output.mkv -y  2> out.txt";
+            //string strCmdText = @"-y -loop 1 -framerate 2 -i Assets/StoreLogo.png -i Assets/audio.mp3 -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest output.mkv -y  2> out.txt";
             Process process = new Process();
             process.StartInfo.FileName = ffmepgLocate;
             process.StartInfo.Arguments = ffmpegArg; //-ss 0 -i output.mp4 -t 10 -an -y test.mp4
@@ -215,7 +215,7 @@ namespace ToVid.Views
 
             stat.Text += "\nBegin processing, it takes (at least) several minutes.\n";
 
-
+            ///Handover to legacy console
             if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
             {
 
