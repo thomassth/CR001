@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /testConsole/ffmpeg
+/ToVid/Models/APIKeysLocal.cs

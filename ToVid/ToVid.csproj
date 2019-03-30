@@ -141,6 +141,8 @@
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Helpers\ShareOperationExtensions.cs" />
+    <Compile Include="Models\APIKeys.cs" />
+    <Compile Include="Models\APIKeysLocal.cs" />
     <Compile Include="Models\DragDropCompletedData.cs" />
     <Compile Include="Models\DragDropData.cs" />
     <Compile Include="Models\DragDropStartingData.cs" />
