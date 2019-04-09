@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -118,6 +119,16 @@ namespace ToVid.Views
             {
                 Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(selectedFile);
                 videoOut.Text = selectedFile.Path;
+
+                ///Pass file to FFMpeg directly
+                videoSend = selectedFile.Path;
+
+                ///Delete the empty file to reduce confusion
+                BasicProperties tempDel = await selectedFile.GetBasicPropertiesAsync();
+                if (tempDel.Size == 0)
+                {
+                    await selectedFile.DeleteAsync();
+                }
                 //Regex rx = new Regex(@"([\w]:\\.+\\)*(.+)\.(.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 //MatchCollection matches = rx.Matches(videoOut.Text);
 
@@ -149,114 +160,138 @@ namespace ToVid.Views
             audioIn.Tapped -= AudioIn_Tapped;
             videoOut.Tapped -= VideoOut_Tapped;
 
-            stat.Text += $"\nAudio: {audioIn.Text}\nImage: {imageIn.Text}\nOutput to: {videoOut.Text}";
-
-            ///check if ffmpeg is located
-            //if (File.Exists(ffmepgLocate))
-            //{
-            //    stat.Text += "\nFfmpeg found";
-            //}
-            //else
-            //{
-            //    stat.Text += "\nFfmpeg lost";
-            //}
-
-
-            ///Open Temp folder, if doesn't exist add a new one
-            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-            StorageFolder temp = await localFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);
-
-            ///IMAGE WORK
-
-            ///copy file into app's loading area
-            StorageFile imageFileIn = await StorageFile.GetFileFromPathAsync(imageIn.Text);
-            await imageFileIn.CopyAsync(temp, imageFileIn.Name, NameCollisionOption.ReplaceExisting);
-            ///send NEW path to ffmpeg
-            StorageFile imageLoad = await temp.GetFileAsync(imageFileIn.Name);
-            imageSend = imageLoad.Path;
-
-            ///AUDIO WORK
-
-            ///copy file into app's loading area
-            StorageFile audioFileIn = await StorageFile.GetFileFromPathAsync(audioIn.Text);
-            await audioFileIn.CopyAsync(temp, audioFileIn.Name, NameCollisionOption.ReplaceExisting);
-            ///send ORIGINAL path to UI, NEW path to ffmpeg
-            StorageFile audioLoad = await temp.GetFileAsync(audioFileIn.Name);
-            audioSend = audioLoad.Path;
-
-            ///OUTPUT WORK
-
-            ///prep file path
-
-            StorageFile videoLoad = await StorageFile.GetFileFromPathAsync(videoOut.Text);
-            Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(videoLoad);
-
-            ///Output file to temp first
-            //videoSend = temp.Path + "\\" + videoLoad.Name;
-            videoSend = videoLoad.Path;
-
-            ///prepare ffmpeg
-            string ffmpegArg = $"-y -loop 1 -framerate 2 -i \"" + imageSend + "\" -i \"" + audioSend + "\" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest \"" + videoSend + "\"";
-            //string strCmdText = @"-y -loop 1 -framerate 2 -i Assets/StoreLogo.png -i Assets/audio.mp3 -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest output.mkv -y  2> out.txt";
-            Process process = new Process();
-            process.StartInfo.FileName = ffmepgLocate;
-            process.StartInfo.Arguments = ffmpegArg; //-ss 0 -i output.mp4 -t 10 -an -y test.mp4
-            process.StartInfo.UseShellExecute = false;
-            //process.StartInfo.RedirectStandardOutput = true;
-            //process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.CreateNoWindow = true;
-            process.EnableRaisingEvents = true;
-
-            //process.StartInfo.CreateNoWindow = true;
-
-            stat.Text += "\n" + ffmpegArg + "\n";
-
-            ///start ffmpeg
-
-            stat.Text += "\nBegin processing, it takes (at least) several minutes.\n";
-
-            ///Handover to legacy console
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            var blockTheThing = 0;
+            ///check if files are ALL selected.
+            if (imageIn.Text == "")
             {
-
-
-                /// store command line parameters in local settings
-                /// so the Lancher can retrieve them and pass them on
-                ApplicationData.Current.LocalSettings.Values["parameters"] = ffmpegArg;
-
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
+                stat.Text += "\nNo image file detected";
+                blockTheThing = 1;
+            }
+            if (audioIn.Text == "")
+            {
+                stat.Text += "\nNo audio file detected";
+                blockTheThing = 1;
+            }
+            if (videoOut.Text == "")
+            {
+                stat.Text += "\nNo video location detected";
+                blockTheThing = 1;
             }
 
-            //await Task.Run(() =>
-            //{
-            //    process.Start();
-            //    process.Exited += new EventHandler(Process_Exited);
-            //    //string output = process.StandardOutput.ReadToEnd();
-            //    //stat.Text += output;
-            //    //string err = process.StandardError.ReadToEnd();
-            //    //stat.Text += err;
 
-            //}
-            //    );
+            ///see if I want to stop the run
+            if (blockTheThing == 0)
+            {
+                stat.Text += $"\nAudio: {audioIn.Text}\nImage: {imageIn.Text}\nOutput to: {videoOut.Text}";
 
-            //string output = process.StandardOutput.ReadToEnd();
-            //stat.Text += output;
-            //string err = process.StandardError.ReadToEnd();
-            //stat.Text += err;
-
-            ///output ffmpeg log
+                ///check if ffmpeg is located
+                //if (File.Exists(ffmepgLocate))
+                //{
+                //    stat.Text += "\nFfmpeg found";
+                //}
+                //else
+                //{
+                //    stat.Text += "\nFfmpeg lost";
+                //}
 
 
 
 
+                ///Open Temp folder, if doesn't exist add a new one
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                StorageFolder temp = await localFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);
 
-        //}
-        //private async void Process_Exited(object sender, System.EventArgs e)
-        //{
-        ///Wait until ffmpeg ends
-        //    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-        //    {
-        stat.Text += "\nEnd";
+                ///IMAGE WORK
+
+                ///copy file into app's loading area
+                StorageFile imageFileIn = await StorageFile.GetFileFromPathAsync(imageIn.Text);
+                await imageFileIn.CopyAsync(temp, imageFileIn.Name, NameCollisionOption.ReplaceExisting);
+                ///send NEW path to ffmpeg
+                StorageFile imageLoad = await temp.GetFileAsync(imageFileIn.Name);
+                imageSend = imageLoad.Path;
+
+                ///AUDIO WORK
+
+                ///copy file into app's loading area
+                StorageFile audioFileIn = await StorageFile.GetFileFromPathAsync(audioIn.Text);
+                await audioFileIn.CopyAsync(temp, audioFileIn.Name, NameCollisionOption.ReplaceExisting);
+                ///send ORIGINAL path to UI, NEW path to ffmpeg
+                StorageFile audioLoad = await temp.GetFileAsync(audioFileIn.Name);
+                audioSend = audioLoad.Path;
+
+                ///OUTPUT WORK
+
+                ///prep file path
+
+                //StorageFile videoLoad = await StorageFile.GetFileFromPathAsync(videoOut.Text);
+                //Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(videoLoad);
+
+                ///Output file to temp first
+                //videoSend = temp.Path + "\\" + videoLoad.Name;
+                //videoSend = videoLoad.Path;
+
+                ///prepare ffmpeg
+                string ffmpegArg = $"-y -loop 1 -framerate 2 -i \"" + imageSend + "\" -i \"" + audioSend + "\" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest \"" + videoSend + "\"";
+                //string strCmdText = @"-y -loop 1 -framerate 2 -i Assets/StoreLogo.png -i Assets/audio.mp3 -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest output.mkv -y  2> out.txt";
+                Process process = new Process();
+                process.StartInfo.FileName = ffmepgLocate;
+                process.StartInfo.Arguments = ffmpegArg; //-ss 0 -i output.mp4 -t 10 -an -y test.mp4
+                process.StartInfo.UseShellExecute = false;
+                //process.StartInfo.RedirectStandardOutput = true;
+                //process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.CreateNoWindow = true;
+                process.EnableRaisingEvents = true;
+
+                //process.StartInfo.CreateNoWindow = true;
+
+                stat.Text += "\n" + ffmpegArg + "\n";
+
+                ///start ffmpeg
+
+                stat.Text += "\nBegin processing, it takes (at least) several minutes. Just wait here.\nDon't close the app, things are just running in the background.\n";
+
+                ///Handover to legacy console
+                if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+                {
+
+
+                    /// store command line parameters in local settings
+                    /// so the Lancher can retrieve them and pass them on
+                    ApplicationData.Current.LocalSettings.Values["parameters"] = ffmpegArg;
+
+                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
+                }
+
+                //await Task.Run(() =>
+                //{
+                //    process.Start();
+                //    process.Exited += new EventHandler(Process_Exited);
+                //    //string output = process.StandardOutput.ReadToEnd();
+                //    //stat.Text += output;
+                //    //string err = process.StandardError.ReadToEnd();
+                //    //stat.Text += err;
+
+                //}
+                //    );
+
+                //string output = process.StandardOutput.ReadToEnd();
+                //stat.Text += output;
+                //string err = process.StandardError.ReadToEnd();
+                //stat.Text += err;
+
+                ///output ffmpeg log
+
+
+
+
+
+                //}
+                //private async void Process_Exited(object sender, System.EventArgs e)
+                //{
+                ///Wait until ffmpeg ends
+                //    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                //    {
+                stat.Text += "\nEnd";
                 //if (File.Exists(videoSend))
                 //{
                 //    stat.Text += "\nOutput found";
@@ -276,21 +311,24 @@ namespace ToVid.Views
 
 
                 ///Copying file from inside to outside
-                
+
                 //StorageFile videoOuted = await StorageFile.GetFileFromPathAsync(videoSend);
                 //StorageFile videoLoadFin = await StorageFile.GetFileFromPathAsync(videoOut.Text);
                 //await videoOuted.CopyAndReplaceAsync(videoLoadFin);
 
-        stat.Text += "\nSaved to " + videoOut.Text;
+                stat.Text += "\nSaved to " + videoOut.Text;
 
 
-        imageIn.IsReadOnly = false;
-        audioIn.IsReadOnly = false;
-        videoOut.IsReadOnly = false;
-        imageIn.IsTapEnabled = true;
-        audioIn.IsTapEnabled = true;
-        videoOut.IsTapEnabled = true;
-
+                imageIn.IsReadOnly = false;
+                audioIn.IsReadOnly = false;
+                videoOut.IsReadOnly = false;
+                imageIn.IsTapEnabled = true;
+                audioIn.IsTapEnabled = true;
+                videoOut.IsTapEnabled = true;
+            } else
+            {
+                stat.Text += "\nFix the problems and try again.";
+            }
             //);
         //}
         }

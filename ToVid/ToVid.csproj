@@ -20,7 +20,7 @@
     <PackageCertificateKeyFile>ToVid_StoreKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>8152A7CE6D5269393A59E8B9BF9639123AA20684</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>

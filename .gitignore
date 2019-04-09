@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /testConsole/ffmpeg
 /ToVid/Models/APIKeysLocal.cs
+/FfmpegConsole

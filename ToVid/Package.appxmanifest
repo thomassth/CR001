@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/windowsTemplateStudio" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" IgnorableNamespaces="uap mp genTemplate desktop rescap">
-  <Identity Name="16252NotYetReady.ToVideo" Publisher="CN=B7009539-3207-4453-9D24-CA5C2BDABFF9" Version="1.0.0.0" />
+  <Identity Name="16252NotYetReady.ToVideo" Publisher="CN=B7009539-3207-4453-9D24-CA5C2BDABFF9" Version="1.0.3.0" />
   <mp:PhoneIdentity PhoneProductId="8afbf5f4-9ac5-41a3-817b-b39fbfbe06bb" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>To Video</DisplayName>

@@ -24,8 +24,8 @@ namespace ToVid.Views
 
         public static BackgroundTaskDeferral AppServiceDeferral = null;
         public static AppServiceConnection Connection = null;
-        public static event EventHandler AppServiceDisconnected;
-        public static event EventHandler<AppServiceTriggerDetails> AppServiceConnected;
+        //public static event EventHandler AppServiceDisconnected;
+        //public static event EventHandler<AppServiceTriggerDetails> AppServiceConnected;
         public static bool IsForeground = false;
 
         public SchemeActivationSamplePage()

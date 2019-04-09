@@ -46,7 +46,6 @@
         <desktop:ParameterGroup GroupId="Parameters" Parameters="/parameters" />
       </desktop:FullTrustProcess>
     </desktop:Extension>
-    <desktop:Extension Category="windows.fullTrustProcess" Executable="testConsole\ffmpeg\bin\ffmpeg.exe" />
       <uap:Extension Category="windows.appService">
       <uap:AppService Name="SampleInteropService" />
     </uap:Extension>
