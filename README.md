@@ -11,12 +11,12 @@ FFmpeg wrapper for podcast publishing
 A GUI wrapping the FFmpeg (not very impressive but it gets the job done)
 
 ## Todo
-Wait for approval on Windows store
-Allow custom FFmpeg location (In case I didn't update the in built one)
-Drag n Drop
-Notifications
-Multiplatform?
-Allow more customization to FFmpeg arguments (Like HandBrake maybe)
+- [ ] Wait for approval on Windows store
+- [ ] Allow custom FFmpeg location (In case I didn't update the in built one)
+- [ ] Drag n Drop
+- [ ] Notifications
+- [ ] Multiplatform?
+- [ ] Allow more customization to FFmpeg arguments (Like HandBrake maybe)
 
 ## Copyright
 Contains FFmpeg: GNU General Public License, version 2
