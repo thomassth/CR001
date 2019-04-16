@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Media;
 
 namespace ToVid.Views
 {
+
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
 
@@ -28,6 +29,7 @@ namespace ToVid.Views
         string audioSend = "";
         string videoSend = "";
         string imageSend = "";
+
 
 
         public MainPage()
@@ -106,13 +108,13 @@ namespace ToVid.Views
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop
             };
             /// Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Plain Text", new List <string> () {
+            savePicker.FileTypeChoices.Add("Plain Text", new List<string>() {
                 ".mkv"
             });
             /// Default file name if the user does not type one in or select a file to replace
             savePicker.SuggestedFileName = "output";
             savePicker.CommitButtonText = "Save here";
-            
+
 
             Windows.Storage.StorageFile selectedFile = await savePicker.PickSaveFileAsync();
             if (selectedFile != null)
@@ -201,6 +203,8 @@ namespace ToVid.Views
                 StorageFolder localFolder = ApplicationData.Current.LocalFolder;
                 StorageFolder temp = await localFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);
 
+                string ffoutfilepath = temp.Path + @"\output.txt";
+
                 ///IMAGE WORK
 
                 ///copy file into app's loading area
@@ -258,8 +262,26 @@ namespace ToVid.Views
                     /// store command line parameters in local settings
                     /// so the Lancher can retrieve them and pass them on
                     ApplicationData.Current.LocalSettings.Values["parameters"] = ffmpegArg;
+                    using (FileStream ffoutput = File.Create(ffoutfilepath))
+                    {
+                        ApplicationData.Current.LocalSettings.Values["outfile"] = ffoutput.Name;
+                    }
 
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
+
+
+                }
+
+
+                /// Read each line of the file into a string array. Each element
+                /// of the array is one line of the file.
+                string[] lines = System.IO.File.ReadAllLines(ffoutfilepath);
+
+                /// Display the file contents by using a foreach loop.
+                foreach (string line in lines)
+                {
+                    /// Use a \n to indent each line of the file.
+                    stat.Text += ("\n" + line);
                 }
 
                 //await Task.Run(() =>
@@ -325,12 +347,13 @@ namespace ToVid.Views
                 imageIn.IsTapEnabled = true;
                 audioIn.IsTapEnabled = true;
                 videoOut.IsTapEnabled = true;
-            } else
+            }
+            else
             {
                 stat.Text += "\nFix the problems and try again.";
             }
             //);
-        //}
+            //}
         }
 
         private void Stat_TextChanged(object sender, TextChangedEventArgs e)
@@ -344,6 +367,6 @@ namespace ToVid.Views
                 break;
             }
         }
-
     }
+    
 }

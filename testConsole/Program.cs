@@ -21,14 +21,19 @@ namespace testConsole
 {
     class Program
     {
+        string outputStore = ApplicationData.Current.TemporaryFolder.ToString() + @"\output.txt";
+
         //private double d1, d2;
         //private AppServiceConnection connection = null;
-
-        static void Main(string[] args)
+         static void Main(string[] args)
         {
             string parameters = ApplicationData.Current.LocalSettings.Values["parameters"] as string;
             string ffmpegLocate = AppDomain.CurrentDomain.BaseDirectory +
             @"\ffmpeg\bin\ffmpeg.exe";
+
+            ///Store the output
+
+
 
             ///Actually starting console
             //Console.Title = "CR001 Background";
@@ -49,16 +54,65 @@ namespace testConsole
                 FileName = ffmpegLocate,
                 CreateNoWindow = true,
                 //FileName = "cmd.exe",
-                Arguments = parameters 
+                RedirectStandardError = true,
+                RedirectStandardOutput = true, // Is a MUST!
+            Arguments = parameters 
             };
             //Console.WriteLine("Starting child process...");
             using (var process = Process.Start(processInfo))
             {
-                process.WaitForExit();
+                var p = new Process();
+                p.StartInfo = processInfo;
+                p.EnableRaisingEvents = true;
+
+
+
+
+                p.OutputDataReceived += OutputDataReceived;
+                p.ErrorDataReceived += ErrorDataReceived;
+
+                p.Start();
+
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+
+                p.WaitForExit();
+
+                p.OutputDataReceived -= OutputDataReceived;
+                p.ErrorDataReceived -= ErrorDataReceived;
+
+
+
+                
             }
             //Console.WriteLine("Press any key to exit ...");
             //Console.ReadKey();
         }
+
+
+        private static void ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+
+            string outputStore = ApplicationData.Current.LocalSettings.Values["outfile"].ToString();
+
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(outputStore, true))
+            {
+                file.WriteLine(e.Data);
+            }
+        }
+
+        private static void OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            string outputStore = ApplicationData.Current.LocalSettings.Values["outfile"].ToString();
+
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(outputStore, true))
+            {
+                file.WriteLine(e.Data);
+            }
+        }
+
         /// <summary>
         /// Open connection to UWP app service
         /// </summary>

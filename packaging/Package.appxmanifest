@@ -3,13 +3,13 @@
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" IgnorableNamespaces="uap mp rescap desktop">
 
   <Identity
-    Name="d618b0dd-3609-4502-9765-29c88b4f5e3f"
-    Publisher="CN=thoma"
-    Version="1.0.0.0" />
+    Name="16252NotYetReady.ToVideo"
+    Publisher="CN=B7009539-3207-4453-9D24-CA5C2BDABFF9"
+    Version="1.0.1.0" />
 
   <Properties>
-    <DisplayName>packaging</DisplayName>
-    <PublisherDisplayName>thoma</PublisherDisplayName>
+    <DisplayName>To Video</DisplayName>
+    <PublisherDisplayName>NotYetReady</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -27,13 +27,16 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="packaging"
-        Description="packaging"
+        DisplayName="To Video"
+        Description="CR001: Combine podcast audio and image to video for publishing. Via ffmpeg."
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
         <uap:DefaultTile
-          Wide310x150Logo="Images\Wide310x150Logo.png" />
+          Wide310x150Logo="Images\Wide310x150Logo.png" 
+          Square71x71Logo="Images\SmallTile.png"
+          Square310x310Logo="Images\LargeTile.png"/>
+        <uap:SplashScreen Image="Images\SplashScreen.png"/>
       </uap:VisualElements>
   <Extensions>
     <desktop:Extension Category="windows.fullTrustProcess" Executable="testConsole\testConsole.exe" >
