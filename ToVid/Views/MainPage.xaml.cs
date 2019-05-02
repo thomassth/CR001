@@ -15,6 +15,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.ApplicationModel.AppService;
+using Windows.Foundation.Collections;
 
 namespace ToVid.Views
 {
@@ -29,6 +31,8 @@ namespace ToVid.Views
         string audioSend = "";
         string videoSend = "";
         string imageSend = "";
+
+        private AppServiceConnection inventoryService;
 
 
 
@@ -254,24 +258,23 @@ namespace ToVid.Views
 
                 stat.Text += "\nBegin processing, it takes (at least) several minutes. Just wait here.\nDon't close the app, things are just running in the background.\n";
 
-                ///Handover to legacy console
-                if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            
+
+
+            ///Handover to legacy console
+            ///1. Check for readiness
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                /// store command line parameters in local settings
+                /// so the Lancher can retrieve them and pass them on
+                ApplicationData.Current.LocalSettings.Values["parameters"] = ffmpegArg;
+                using (FileStream ffoutput = File.Create(ffoutfilepath))
                 {
-
-
-                    /// store command line parameters in local settings
-                    /// so the Lancher can retrieve them and pass them on
-                    ApplicationData.Current.LocalSettings.Values["parameters"] = ffmpegArg;
-                    using (FileStream ffoutput = File.Create(ffoutfilepath))
-                    {
-                        ApplicationData.Current.LocalSettings.Values["outfile"] = ffoutput.Name;
-                    }
-
-                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
-
-
+                    ApplicationData.Current.LocalSettings.Values["outfile"] = ffoutput.Name;
                 }
 
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
+            }
 
                 /// Read each line of the file into a string array. Each element
                 /// of the array is one line of the file.
@@ -303,16 +306,37 @@ namespace ToVid.Views
 
                 ///output ffmpeg log
 
-
-
-
-
+                Ending();
                 //}
                 //private async void Process_Exited(object sender, System.EventArgs e)
                 //{
                 ///Wait until ffmpeg ends
                 //    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                 //    {
+
+            }
+            else
+            {
+                stat.Text += "\nFix the problems and try again.";
+            }
+            //);
+            //}
+        }
+
+        private void Ending()
+        {
+
+        //private  void OnRequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+       //var messageDeferral = args.GetDeferral();
+
+            //ValueSet message = args.Request.Message;
+            //ValueSet returnData = new ValueSet();
+
+            //string command = message["Command"] as string;
+            //int? inventoryIndex = message["ID"] as int?;
+
+            //if (inventoryIndex.HasValue) {
+
                 stat.Text += "\nEnd";
                 //if (File.Exists(videoSend))
                 //{
@@ -347,15 +371,22 @@ namespace ToVid.Views
                 imageIn.IsTapEnabled = true;
                 audioIn.IsTapEnabled = true;
                 videoOut.IsTapEnabled = true;
-            }
-            else
-            {
-                stat.Text += "\nFix the problems and try again.";
-            }
-            //);
             //}
-        }
+            //try
+            //{
+            //    // Return the data to the caller.
+            //    await args.Request.SendResponseAsync(returnData);
+            //}
+            //catch (Exception e)
+            //{
+            //    // Your exception handling code here.
+            //}
+            //finally {
+            //    messageDeferral.Complete();
+            //}
 
+        }
+        /// Auto scroll stat
         private void Stat_TextChanged(object sender, TextChangedEventArgs e)
         {
             var grid = (Grid)VisualTreeHelper.GetChild(stat, 0);

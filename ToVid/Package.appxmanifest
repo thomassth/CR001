@@ -32,10 +32,10 @@
             <uap:DataFormat>URI</uap:DataFormat>
             <uap:DataFormat>Bitmap</uap:DataFormat>
           </uap:ShareTarget>
-        </uap:Extension>
+        </uap:Extension>-->
         <uap:Extension Category="windows.appService">
           <uap:AppService Name="CommunicationService" />
-        </uap:Extension>-->
+        </uap:Extension>
       </Extensions>
     </Application>
   </Applications>
