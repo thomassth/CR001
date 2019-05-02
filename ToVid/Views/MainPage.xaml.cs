@@ -239,7 +239,7 @@ namespace ToVid.Views
                 //videoSend = videoLoad.Path;
 
                 ///prepare ffmpeg
-                string ffmpegArg = $"-y -loop 1 -framerate 2 -i \"" + imageSend + "\" -i \"" + audioSend + "\" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest \"" + videoSend + "\"";
+                string ffmpegArg = $"-y -loop 1 -framerate 2 -i \"" + imageSend + "\" -i \"" + audioSend + "\" -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest  -fflags +shortest -max_interleave_delta 100M \"" + videoSend + "\"";
                 //string strCmdText = @"-y -loop 1 -framerate 2 -i Assets/StoreLogo.png -i Assets/audio.mp3 -c:v libx264 -tune stillimage -c:a aac -b:a 192k -pix_fmt yuv420p -shortest output.mkv -y  2> out.txt";
                 Process process = new Process();
                 process.StartInfo.FileName = ffmepgLocate;

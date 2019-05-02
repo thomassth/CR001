@@ -5,7 +5,7 @@
   <Identity
     Name="16252NotYetReady.ToVideo"
     Publisher="CN=B7009539-3207-4453-9D24-CA5C2BDABFF9"
-    Version="1.0.2.0" />
+    Version="1.1.0.0" />
 
   <Properties>
     <DisplayName>To Video</DisplayName>
